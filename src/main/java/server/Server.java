@@ -16,8 +16,12 @@ public class Server{
     public Socket attendi(){
         System.out.println("1 SERVER partito in esecuzione... attesa connessione del client.");
         try{
-            server = new ServerSocket(port);
+            if(server == null){
+                server = new ServerSocket(port);
+            }
+
             client = server.accept();
+            
 
             inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
             outVersoClient = new DataOutputStream(client.getOutputStream());
@@ -35,11 +39,12 @@ public class Server{
         outVersoClient = new DataOutputStream(client.getOutputStream());
 
         System.out.println("3 Benvenuto CLIENT, scrivi una frase e questa verrà ritrasmessa ... ");
-        
+
         for(;;){
             stringaRicevuta = inDalClient.readLine();
             if(stringaRicevuta == null || stringaRicevuta == "FINE"){
                 outVersoClient.writeBytes(stringaRicevuta + " (=> Server in chiusura...)"+'\n');
+                System.out.println("Echo sul server in chiusura: "+stringaRicevuta);
                 break;
                 
             }else{
@@ -51,8 +56,6 @@ public class Server{
         }
 
         System.out.println("6 Echo sul server in chiusura: "+stringaRicevuta);
-        outVersoClient.close();
-        inDalClient.close();
         System.out.println("9 Chiusura socket "+client);
         client.close();
         
