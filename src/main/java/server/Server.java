@@ -14,7 +14,7 @@ public class Server{
     DataOutputStream outVersoClient;
 
     public Socket attendi(){
-        System.out.println("1 SERVER partito in esecuzione... attesa connessione del client.");
+        System.out.println("SERVER disponibile... attesa connessione del client.");
         try{
             if(server == null){
                 server = new ServerSocket(port);
@@ -38,25 +38,26 @@ public class Server{
         inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));     
         outVersoClient = new DataOutputStream(client.getOutputStream());
 
-        System.out.println("3 Benvenuto CLIENT, scrivi una frase e questa verrà ritrasmessa ... ");
 
         for(;;){
             stringaRicevuta = inDalClient.readLine();
             if(stringaRicevuta == null || stringaRicevuta == "FINE"){
-                outVersoClient.writeBytes(stringaRicevuta + " (=> Server in chiusura...)"+'\n');
+               
+                outVersoClient.writeBytes(stringaModificata + " (=> Server in chiusura...)"+'\n');
                 System.out.println("Echo sul server in chiusura: "+stringaRicevuta);
                 break;
                 
             }else{
-                outVersoClient.writeBytes(stringaRicevuta+" (ricevuta e trasmessa) "+'\n');
-                System.out.println("6 Echo sul server: "+stringaRicevuta);
+                stringaModificata = stringaRicevuta.toUpperCase();
+                outVersoClient.writeBytes(stringaModificata+" (ricevuta e trasmessa) "+'\n');
+                System.out.println("Echo sul server: "+stringaRicevuta);
             }
 
             
         }
 
-        System.out.println("6 Echo sul server in chiusura: "+stringaRicevuta);
-        System.out.println("9 Chiusura socket "+client);
+        System.out.println("Echo sul server in chiusura: "+stringaRicevuta);
+        System.out.println("Chiusura socket "+client);
         client.close();
         
     }
